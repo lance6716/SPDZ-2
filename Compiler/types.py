@@ -1811,6 +1811,10 @@ class cfix(_number):
         cint_values = map(cfix_to_cint, values)
         writesocketc(client_id, message_type, *cint_values)
 
+    @classmethod
+    def malloc(cls, size):
+        return program.malloc(size, cls)
+
     @vectorize_init
     def __init__(self, v=None, size=None):
         f = self.f
@@ -2753,13 +2757,16 @@ class sfixMatrix(Matrix):
     def __init__(self, rows, columns, address=None):
         self.rows = rows
         self.columns = columns
-        self.multi_array = Matrix(rows, columns, sint, address)
+        self.multi_array = Matrix(rows, columns, sfix, address)
 
     def __getitem__(self, index):
         return sfixArray(self.columns, self.multi_array[index].address)
 
     def get_address(self):
         return self.multi_array.get_address()
+
+    def __mul__(self, other):
+        return self.multi_array * other
 
 class _mem(_number):
     __add__ = lambda self,other: self.read() + other
