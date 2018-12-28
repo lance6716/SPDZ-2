@@ -1,31 +1,3 @@
-PARTY = 3
-COL = 4
-ROW = 5
-
-A = Matrix(ROW * PARTY, COL, sfix)
-b = Array(ROW * PARTY, sfix)
-
-for i in range(ROW):
-  for k in range(PARTY):
-    for j in range(COL):
-      A[PARTY * i + k][j] = sfix.from_sint(sint.get_input_from(k))
-    b[PARTY * i + k] = sfix.from_sint(sint.get_input_from(k))
-
-t = Matrix(COL, COL, sfix)
-#t.assign_all(1)
-for i in range(COL):
-  for j in range(COL):
-    t[i][j] = sfix.from_sint(sint(j))
-for i in range(COL):
-  print_ln('%s %s %s %s', t[i][0].reveal(), t[i][1].reveal(), t[i][2].reveal(), t[i][3].reveal())
-t = t.T()
-for i in range(COL):
-  print_ln('%s %s %s %s', t[i][0].reveal(), t[i][1].reveal(), t[i][2].reveal(), t[i][3].reveal())
-#print_ln('A[0][0] %s ', A[0][0].reveal())
-#print_ln('t[0][0] %s ', t[0][0].reveal())
-
-mul_result = A * t
-for i in range(15):
-  #for j in range(COL):
-  print_ln('%s %s %s %s', mul_result[i][0].reveal(), mul_result[i][1].reveal(), mul_result[i][2].reveal(), mul_result[i][3].reveal())
-
+t = Matrix(3, 3, sfix)
+t.assign_all(1)
+print_ln('t[0][0] %s', t[0][0].reveal())

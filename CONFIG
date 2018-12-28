@@ -1,3 +1,5 @@
+MY_CFLAGS = -DINSECURE
+
 ROOT = .
 
 OPTIM= -O3
@@ -42,10 +44,10 @@ ifeq ($(OS), Linux)
 LDLIBS += -lrt
 endif
 
-BOOST = -lboost_system -lboost_thread $(MY_BOOST)
+BOOST = -lboost_system -lboost_thread $(MY_BOOST) 
 
-CXX = g++ -no-pie
+CXX = g++
 #CXX = clang++
-CFLAGS += $(ARCH) $(MY_CFLAGS) -g -Wextra -Wall $(OPTIM) -I$(ROOT) -pthread $(PROF) $(DEBUG) $(MOD) $(MEMPROTECT) $(GF2N_LONG) $(PREP_DIR) -maes -mpclmul -msse4.1 -mavx -mavx2 -mbmi2 --std=c++11 -Werror
+CFLAGS += $(ARCH) $(MY_CFLAGS) -g -Wextra -Wall $(OPTIM) -I$(ROOT) -I/root/mpc/boost_1_68_0/ -L/root/mpc/boost_1_68_0/stage/lib -pthread $(PROF) $(DEBUG) $(MOD) $(MEMPROTECT) $(GF2N_LONG) $(PREP_DIR) -maes -mpclmul -msse4.1 -mavx -mavx2 -mbmi2 --std=c++11 -Werror
 CPPFLAGS = $(CFLAGS)
 LD = $(CXX)
