@@ -1,0 +1,36 @@
+ROW = 50
+COL = 10
+PARTY = 3
+
+value = Matrix(ROW * PARTY, COL, sint)
+weight = Matrix(ROW * PARTY, COL, sint)
+
+value.assign_all(0)
+weight.assign_all(0)
+
+for i in range(ROW):
+  for k in range(PARTY):
+    for j in range(COL):
+      value[PARTY * i + k][j] = sint.get_input_from(k)
+    for j in range(COL):
+      weight[PARTY * i + k][j] = sint.get_input_from(k)
+
+value_sum = Array(COL, sfix)
+weight_sum = Array(COL, sint)
+
+value_sum.assign_all(0)
+weight_sum.assign_all(0)
+
+@for_range_parallel(COL, COL)
+def f(j):
+  @for_range_parallel(ROW * PARTY, ROW * PARTY)
+  def f(i):
+    weight_sum[j] += weight[i][j]
+    value_sum[j] += value[i][j]
+
+@for_range_parallel(COL, COL)
+def f(i):
+  value_sum[i] = value_sum[i] / weight_sum[i]
+
+for i in range(COL):
+  print_ln('%s ', value_sum[i].reveal())

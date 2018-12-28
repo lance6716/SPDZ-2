@@ -1,0 +1,53 @@
+PARTY = 3
+COL = 4
+ROW = 5
+
+A = Matrix(ROW * PARTY, COL, sfix)
+b = Array(ROW * PARTY, sfix)
+
+for i in range(ROW):
+  for k in range(PARTY):
+    for j in range(COL):
+      A[PARTY * i + k][j] = sfix.from_sint(sint.get_input_from(k))
+    b[PARTY * i + k] = sfix.from_sint(sint.get_input_from(k))
+
+AT = A.T()
+solveA = AT * A
+solveb = AT * b
+
+for i in range(COL):
+  print_ln('%s %s %s %s', solveA[i][0].reveal(), solveA[i][1].reveal(), solveA[i][2].reveal(), solveA[i][3].reveal())
+
+# LU decompo
+
+L = Matrix(COL, COL, sfix)
+U = Matrix(COL, COL, sfix)
+L.assign_all(0)
+U.assign_all(0)
+
+@for_range_parallel(COL, COL)
+def loop(i):
+  L[i][i] = sfix(1)
+
+for k in range(COL):
+  U[k][k] = solveA[k][k]
+  for i in range(k + 1, COL):
+    L[i][k] = solveA[i][k] / U[k][k]
+    U[k][i] = solveA[k][i]
+  for i in range(k + 1, COL):
+    for j in range(k + 1, COL):
+      solveA[i][j] = solveA[i][j] - L[i][k] * U[k][j]
+
+solvex = Array(COL, sfix)
+solvey = Array(COL, sfix)
+
+for i in range(COL):
+  solvey[i] = solveb[i] - sum(L[i][j] * solvey[j] for j in range(i))
+for i in range(COL - 1, -1, -1):
+  solvex[i] = (solvey[i] 
+      - sum(U[i][j] * solvex[j] for j in range(i + 1, COL))) / U[i][i]
+
+for i in range(COL):
+  print_ln('%s %s %s %s', U[i][0].reveal(), U[i][1].reveal(), U[i][2].reveal(), U[i][3].reveal())
+
+print_ln('%s %s %s %s', solvex[0].reveal(), solvex[1].reveal(), solvex[2].reveal(), solvex[3].reveal())
